@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="box">
+        <p>全选</p>
+        <input type="checkbox"/>
+        <hr/>
+        <p v-for="item in data">
+         <input type="checkbox" 
+                :checked="item.checked"
+                />
+      {{item.title}}</p>
+
+    </div>
+        <script src="./vue.js"></script> 
+            <script>
+                // 需要操作数据
+                let data=[
+                    {
+                        checked:true,
+                        title:"1号"
+                    },
+                    {
+                        checked:true,
+                        title:"2号"
+                    }
+                    ]
+         new Vue({
+                        el:"#box",
+                        data:{
+                            data
+                        }
+
+                    })
+
+            </script>
+</body>
+</html>

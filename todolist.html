@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+    <section class="todoapp">
+        <div id="box">
+            <header class="header" >
+                <h1>todos</h1>
+                <input 
+                class="new-todo"
+                placeholder="请输入内容"
+                @keydown="jianpan"
+                v-model="value"
+                />
+            </header>
+            <section class="main">
+                <input 
+                class="toggle-all"
+                type="checkbox"
+                v-model="allChecked"
+                />
+                <ul class="todo-list">
+                    <li 
+                    v-for="item in data"
+                    :class="{completed: item.selected}"
+                    >
+                        <div class="view">
+                            <!-- 单选 -->
+                            <input
+                             class="toggle"
+                             :checked="item.select"
+                              type="checkbox" 
+                              @change="oneChecked(item,$event)"
+                              />
+                            <label>{{item.title}}</label>
+                            <button 
+                            class="destroy"
+                            @click="delet(item.id)"  
+                             ></button>
+                        </div>
+                        <input class="edit" />
+                     </li>
+                </ul>
+            </section>
+            <footer class="footer">
+	            <span class="todo-count">
+	            	<strong>0</strong>
+	            	<span>条未选中</span>
+	            </span>
+	            <!-- <ul class="filters">
+	            	<li><a href="#/all" class="selected">All</a></li> 
+	            	<li><a href="#/active" class="">Active</a></li> 
+	            	<li><a href="#/completed" class="">Completed</a></li>
+	           	</ul> -->
+            </footer>
+        </div>
+    </section>
+</body>
+<script src="./vue.js"></script>
+<script>
+	/*
+		1. 增删改查数据，要使用localStorage做数据持久化
+		2. 根据hash不同，过滤渲染的数据
+			a. 全部任务
+			b. 完成的任务
+			c. 未完成的任务
+		3. 自己设计数据结构
+			
+	*/
+    let data = [
+        {
+            id:1,
+            title: 'hello',
+            select: false,
+        },
+        {
+            id:2,
+            title: 'hello123',
+            select: true,
+        }
+     ]
+    new Vue({
+        el:"#box",
+        data:{
+            //  这里面遇到一个问题  提醒value未定义    最后是要在数据里面定义一个value
+            data:data,
+            value:'' 
+         },
+        methods:{
+            jianpan(e){
+                if(e.keyCode===13){
+                   this.data.push({
+                    id:Math.random(),
+                    title: this.value,
+                    select: false
+                   })
+                }
+                 this.value=""
+            },
+            //单选
+            oneChecked(item,e){
+                item.select=e.target.checked
+            },
+            //删除 找到单亲点击的ID  用ID删除内一项
+            delet(id){
+                for(var i=0;i<data.length;i++){
+                if(data[i].id===id){
+                       data.splice(data[i],1)
+                    }
+                   
+                }
+            }
+            
+        },
+        //单选
+        computed:{
+            //这里面不是函数   是一个返回值   取值时候是返回值   set是直接改变值
+            allChecked:{
+                //取值的时候会触发
+                get(){
+                   return this.data.every(item=>item.select)
+                },
+                //设置值得时候触发
+                set(i){
+                    this.data.forEach(item=>item.select=i);
+                }
+            }
+
+        }
+    })
+</script>
+
+</html>
